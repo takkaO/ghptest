@@ -1,0 +1,42 @@
+{
+  "name": "yrit_iot_burner_web",
+  "version": "0.9.0",
+  "description": "YRIT IoT burner for web",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "copy-modules": "npm-run-all --parallel cp-*",
+    "cp-alpinejs": "cpx \"./node_modules/alpinejs/**\" \"./web/modules/alpinejs\" ",
+    "cp-bootstrap": "cpx \"./node_modules/bootstrap/**\" \"./web/modules/bootstrap\" ",
+    "cp-bootstrap-icons": "cpx \"./node_modules/bootstrap-icons/**\" \"./web/modules/bootstrap-icons\" ",
+    "cp-sweetalert2": "cpx \"./node_modules/sweetalert2/**\" \"./web/modules/sweetalert2\" ",
+    "cp-bossa-web-dist": "cpx \"./bossa-web/dist/**\" \"./web/modules/bossa-web/dist\" ",
+    "cp-bossa-web-license": "cpx \"./bossa-web/LICENSE\" \"./web/modules/bossa-web\" ",
+    "cp-bossa-web-readme": "cpx \"./bossa-web/README.md\" \"./web/modules/bossa-web\" ",
+    "cp-bossa-web-package": "cpx \"./bossa-web/package.json\" \"./web/modules/bossa-web\" ",
+    "cp-esptool-js": "cpx \"./node_modules/esptool-js/**\" \"./web/modules/esptool-js\" ",
+    "cp-crypto-es": "cpx \"./node_modules/crypto-es/**\" \"./web/modules/crypto-es\" ",
+    "cp-marked": "cpx \"./node_modules/marked/**\" \"./web/modules/marked\" ",
+    "cp-animate.css": "cpx \"./node_modules/animate.css/**\" \"./web/styles/animate.css\" ",
+    "init-bossa-web": "git submodule update --init && cd bossa-web && npm i",
+    "build-bossa-web": "cd bossa-web && npm run build && npm run patch"
+  },
+  "author": "takkaO",
+  "license": "AGPL-3.0-only",
+  "devDependencies": {
+    "alpinejs": "^3.14.1",
+    "animate.css": "^4.1.1",
+    "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.11.3",
+    "bossa-web": "^0.9.7",
+    "cpx": "^1.5.0",
+    "crypto-es": "^2.1.0",
+    "esptool-js": "^0.4.5",
+    "marked": "^14.0.0",
+    "npm-run-all": "^4.1.5",
+    "sweetalert2": "^11.12.4"
+  },
+  "volta": {
+    "node": "20.16.0",
+    "npm": "10.8.2"
+  }
+}

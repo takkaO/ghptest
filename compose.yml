@@ -1,0 +1,13 @@
+services:
+  yrit-iot-burner-web:
+    image: nginx:1.27.0
+    volumes:
+      - ./web:/usr/share/nginx/html
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
+    ports:
+      - 8080:80
+    environment:
+      - TZ=Asia/Tokyo
+    container_name: yrit_iot_burner_web

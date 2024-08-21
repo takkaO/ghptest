@@ -1,0 +1,52 @@
+networks:
+  traefik-web:
+    name: traefik-web
+    external: true
+
+services:
+  yrit-iot-burner-web:
+    image: nginx:1.27.0
+    volumes:
+      - ./web:/usr/share/nginx/html
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
+    # ports:
+    #   - 8080:80
+    networks:
+      - traefik-web
+    environment:
+      - TZ=Asia/Tokyo
+    labels:
+      - "traefik.enable=true"
+      ## ルーティングを設定
+      - "traefik.http.routers.${PROJECT}_${SERVICE}.rule=Host(`${HOST_NAME}`) && PathPrefix(`/${PROJECT}/${SERVICE}`)"
+      - "traefik.http.routers.${PROJECT}_${SERVICE}.entrypoints=websecure"
+      - "traefik.http.routers.${PROJECT}_${SERVICE}.tls.certresolver=letsencrypt"
+      - "traefik.http.services.${PROJECT}_${SERVICE}.loadbalancer.server.port=80"
+      ## ミドルウェアを定義
+      - "traefik.http.routers.${PROJECT}_${SERVICE}.middlewares=${PROJECT}_${SERVICE}_redirect, ${PROJECT}_${SERVICE}_stripprefix"
+      ## 最後にスラッシュをつけるための置換処理を定義
+      - "traefik.http.middlewares.${PROJECT}_${SERVICE}_redirect.redirectregex.regex=^(https?)://([^/]+)/${PROJECT}/${SERVICE}$$"
+      - "traefik.http.middlewares.${PROJECT}_${SERVICE}_redirect.redirectregex.replacement=$${1}://$${2}/${PROJECT}/${SERVICE}/"
+      ## プレフィックスの削除
+      - "traefik.http.middlewares.${PROJECT}_${SERVICE}_stripprefix.stripprefix.prefixes=/${PROJECT}/${SERVICE}"
+
+      ## 以下 http 用
+      - "traefik.http.routers.${PROJECT}_${SERVICE}-http.entrypoints=web"
+      - "traefik.http.routers.${PROJECT}_${SERVICE}-http.rule=Host(`${HOST_NAME}`) && PathPrefix(`/${PROJECT}/${SERVICE}`)"
+      ## ミドルウェアを定義
+      - "traefik.http.routers.${PROJECT}_${SERVICE}-http.middlewares=${PROJECT}_${SERVICE}-http_redirect, ${PROJECT}_${SERVICE}-http_stripprefix"
+            ## 最後にスラッシュをつけるための置換処理を定義
+      - "traefik.http.middlewares.${PROJECT}_${SERVICE}-http_redirect.redirectregex.regex=^(https?)://([^/]+)/${PROJECT}/${SERVICE}$$"
+      - "traefik.http.middlewares.${PROJECT}_${SERVICE}-http_redirect.redirectregex.replacement=$${1}://$${2}/${PROJECT}/${SERVICE}/"
+      ## プレフィックスの削除
+      - "traefik.http.middlewares.${PROJECT}_${SERVICE}-http_stripprefix.stripprefix.prefixes=/${PROJECT}/${SERVICE}"
+
+      ## 以下 https へのリダイレクト用
+      - "traefik.http.routers.${PROJECT}_${SERVICE}-http.entrypoints=web"
+      - "traefik.http.routers.${PROJECT}_${SERVICE}-http.rule=Host(`${HOST_NAME}`) && PathPrefix(`/${PROJECT}/${SERVICE}`)"
+      - "traefik.http.routers.${PROJECT}_${SERVICE}-http.middlewares=${PROJECT}_${SERVICE}-https"
+      - "traefik.http.middlewares.${PROJECT}_${SERVICE}-https.redirectscheme.scheme=https"
+
+    container_name: yrit_iot_burner_web
