@@ -48,7 +48,7 @@ document.addEventListener('alpine:init', () => {
 		async init() {
 			console.log("Ready!");
 
-			let response = await fetch("../firmwares.json")
+			let response = await fetch("./firmwares.json")
 				.catch((err) => {
 					// ネットワークエラー
 					console.log("err", err);
@@ -60,7 +60,7 @@ document.addEventListener('alpine:init', () => {
 
 		async checkChangeLog(selectedDeviceName, selectedFirmware) {
 			let respChangelog = await fetch(
-				`../firmwares/${selectedDeviceName}/${selectedFirmware}/CHANGELOG.md`
+				`./firmwares/${selectedDeviceName}/${selectedFirmware}/CHANGELOG.md`
 			).then((response) => {
 				if (!response.ok) {
 					return undefined;
@@ -132,7 +132,7 @@ document.addEventListener('alpine:init', () => {
 			}
 
 			let respDfuOperate = await fetch(
-				`../images/DFU_Mode/${this.selectedDeviceName}.webp`
+				`./images/DFU_Mode/${this.selectedDeviceName}.webp`
 			).then((response) => {
 				if (!response.ok) {
 					return false;
@@ -154,7 +154,7 @@ document.addEventListener('alpine:init', () => {
 							下記の動画を参考にデバイスを操作し、書き込みモードにしてください。
 							準備が完了したら 「準備完了」 ボタンを押してください。
 						</p>
-						<img class="dfu-animation" src="../images/DFU_Mode/${this.selectedDeviceName}.webp">
+						<img class="dfu-animation" src="./images/DFU_Mode/${this.selectedDeviceName}.webp">
 					`,
 					// icon: "error",
 					confirmButtonText: '準備完了！',
@@ -301,10 +301,10 @@ document.addEventListener('alpine:init', () => {
 			this.writingProgressMessage = "ファームウェア取得中";
 
 			// ファームウェアの取得
-			const relBootloaderUrl = `../firmwares/${this.selectedDeviceName}/${this.selectedFirmware}/${this.selectedVersion}/${this.selectedFirmware}.ino.bootloader.bin`;
-			const relPartitionsUrl = `../firmwares/${this.selectedDeviceName}/${this.selectedFirmware}/${this.selectedVersion}/${this.selectedFirmware}.ino.partitions.bin`;
-			const relMainBinaryUrl = `../firmwares/${this.selectedDeviceName}/${this.selectedFirmware}/${this.selectedVersion}/${this.selectedFirmware}.ino.bin`;
-			const relBootApp0Url = `../firmwares/${this.selectedDeviceName}/${this.selectedFirmware}/${this.selectedVersion}/boot_app0.bin`;
+			const relBootloaderUrl = `./firmwares/${this.selectedDeviceName}/${this.selectedFirmware}/${this.selectedVersion}/${this.selectedFirmware}.ino.bootloader.bin`;
+			const relPartitionsUrl = `./firmwares/${this.selectedDeviceName}/${this.selectedFirmware}/${this.selectedVersion}/${this.selectedFirmware}.ino.partitions.bin`;
+			const relMainBinaryUrl = `./firmwares/${this.selectedDeviceName}/${this.selectedFirmware}/${this.selectedVersion}/${this.selectedFirmware}.ino.bin`;
+			const relBootApp0Url = `./firmwares/${this.selectedDeviceName}/${this.selectedFirmware}/${this.selectedVersion}/boot_app0.bin`;
 
 			let respMain = await fetch(
 				relMainBinaryUrl
@@ -462,7 +462,7 @@ document.addEventListener('alpine:init', () => {
 			this.writingProgressMessage = "ファームウェア取得中";
 
 			// ファームウェアの取得
-			const relativeUrl = `../firmwares/${this.selectedDeviceName}/${this.selectedFirmware}/${this.selectedVersion}/${this.selectedFirmware}.ino.bin`;
+			const relativeUrl = `./firmwares/${this.selectedDeviceName}/${this.selectedFirmware}/${this.selectedVersion}/${this.selectedFirmware}.ino.bin`;
 			let response = await fetch(
 				relativeUrl
 			).catch((err) => {
