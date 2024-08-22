@@ -405,6 +405,10 @@ section {
 /* ChangeLog Body                       */
 /****************************************/
 
+.changelog-popup {
+    width: min(90vw, 1000px) !important;
+}
+
 .changelog-body {
     text-align: left !important;
     font-size: medium !important;

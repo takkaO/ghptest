@@ -599,10 +599,11 @@ document.addEventListener('alpine:init', () => {
 					`
 				},
 				customClass: {
-					htmlContainer: 'changelog-body',
+					popup: "changelog-popup",
+					htmlContainer: "changelog-body",
 				},
-				width: "90vw",
 				html: this.changeLogHtml,
+				// width: "90vw",
 				// icon: "error",
 				confirmButtonText: '閉じる'
 			});
