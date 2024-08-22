@@ -15,7 +15,7 @@ import Swal from "../modules/sweetalert2/src/sweetalert2.js"
 import * as BossaWeb from "../modules/bossa-web/dist/bossa-web.js"
 import * as EspTool from "../modules/esptool-js/bundle.js"
 import * as Utils from "./utils.js"
-import * as Partitions from "./partitions.js"
+import * as FlashParameters from "./flashParameters.js"
 import CryptoES from "../modules/crypto-es/lib/index.js"
 import { marked } from "../modules/marked/lib/marked.esm.js"
 
@@ -28,6 +28,12 @@ const FLASH_ERROR = Utils.createEnum([
 	"INVALID_DEVICE_FAMILY",
 	"FAILED_WRITE",
 ]);
+
+// 書き込み中のページ遷移時に警告を出す
+function windowUnloadHandler(e) {
+	e.preventDefault();
+	e.returnValue = "";
+}
 
 document.addEventListener('alpine:init', () => {
 	Alpine.data('app', () => ({
@@ -174,7 +180,7 @@ document.addEventListener('alpine:init', () => {
 			this.writingProgress = 0;
 			this.writingProgressMessage = "初期化中";
 
-			const offset = Partitions.getOffset(this.selectedDeviceName);
+			const parameters = FlashParameters.getParameters(this.selectedDeviceName);
 			let errNo = FLASH_ERROR.CANCELED;
 			switch (this.selectedDeviceName) {
 				case "WioTerminal": {
@@ -196,13 +202,14 @@ document.addEventListener('alpine:init', () => {
 				case "M5Atom_S3":
 				// Fallthrough
 				case "M5Station":
-					errNo = await this.writeToEsp32(offset);
+					errNo = await this.writeToEsp32(parameters);
 					break;
 				default:
 					console.log("Unsupported device.");
 					break;
 			}
 
+			window.removeEventListener("beforeunload", windowUnloadHandler);
 			this.flashWriting = false;
 			this.disableAllForms = false;	// 全てのフォームを無効化を解除
 
@@ -212,7 +219,8 @@ document.addEventListener('alpine:init', () => {
 				case FLASH_ERROR.NONE:
 					alert.title = "成功！";
 					alert.icon = "success";
-					alert.html = "プログラムの書き込みが正常に完了しました";
+					alert.html = "プログラムの書き込みが正常に完了しました。<br>";
+					alert.html += "デバイスが起動しないときはリセットボタンを押してください。";
 					break;
 				case FLASH_ERROR.CANCELED:
 					showAlert = false;
@@ -230,12 +238,14 @@ document.addEventListener('alpine:init', () => {
 				case FLASH_ERROR.INVALID_BOOTLOADER:
 					alert.title = "失敗！";
 					alert.icon = "error";
-					alert.html = "ブートローダ検証に失敗しました。<br>デバイス選択が間違っていませんか？";
+					alert.html = "ブートローダ検証に失敗しました。<br>";
+					alert.html += "デバイス選択が間違っていませんか？";
 					break;
 				case FLASH_ERROR.INVALID_DEVICE_FAMILY:
 					alert.title = "失敗！";
 					alert.icon = "error";
-					alert.html = "デバイスファミリの検証に失敗しました。<br>デバイス選択が間違っていませんか？";
+					alert.html = "デバイスファミリの検証に失敗しました。<br>";
+					alert.html += "デバイス選択が間違っていませんか？";
 					break;
 				case FLASH_ERROR.FAILED_WRITE:
 					alert.title = "失敗！";
@@ -256,7 +266,7 @@ document.addEventListener('alpine:init', () => {
 			}
 		},
 
-		async writeToEsp32(offset) {
+		async writeToEsp32(parameters) {
 			// 接続デバイスの探索と選択
 			let serialPort = await navigator.serial.requestPort(
 			).catch((err) => {
@@ -268,6 +278,7 @@ document.addEventListener('alpine:init', () => {
 				return FLASH_ERROR.CANCELED;
 			}
 			this.flashWriting = true;
+			window.addEventListener("beforeunload", windowUnloadHandler);
 
 			const NEED_TRACE = false;
 			let transport = new EspTool.Transport(serialPort, NEED_TRACE);
@@ -284,17 +295,23 @@ document.addEventListener('alpine:init', () => {
 				}
 			};
 
+			console.log(parameters.baudrate);
 			const loaderFlashOptions = {
 				transport,
-				baudrate: 921600,
+				baudrate: parameters.baudrate, //921600,
 				teraminal: espLoaderTerminal,
 				debugLogging: false
 			};
 			let espLoader = new EspTool.ESPLoader(loaderFlashOptions);
 
 			this.writingProgressMessage = "デバイス情報取得中";
-			let chip = await espLoader.main();
-			console.log(chip);
+			try {
+				let chip = await espLoader.main();
+				console.log(chip);
+			} catch (err) {
+				console.log(err);
+				return FLASH_ERROR.OPEN_SERIAL_PORT;
+			}
 
 			/// chip の規則が結構アバウトなので、スクリーニングは難しそう
 
@@ -359,18 +376,20 @@ document.addEventListener('alpine:init', () => {
 			const bootApp0_Binary = Utils.largeBufferToString(new Uint8Array(await respBootApp0.arrayBuffer()));
 
 			const fileArray = [
-				{ data: bootloaderBinary, address: offset["bootloader"] },
-				{ data: partitionsBinary, address: offset["partitions"] },
-				{ data: bootApp0_Binary, address: offset["boot_app0"] },
-				{ data: mainBinary, address: offset["main"] }
+				{ data: bootloaderBinary, address: parameters.offset["bootloader"] },
+				{ data: partitionsBinary, address: parameters.offset["partitions"] },
+				{ data: bootApp0_Binary, address: parameters.offset["boot_app0"] },
+				{ data: mainBinary, address: parameters.offset["main"] }
 			];
 
 			this.writingProgress = 5;
 
-			// 書き込み中のコールバックを宣言
+			// 書き込みオプションとコールバックを宣言
 			const flashOptions = {
 				fileArray: fileArray,
-				flashSize: "keep",
+				flashSize: ((parameters.flashSize === undefined) ? "keep" : parameters.flashSize),
+				flashFreq: ((parameters.flashFreq === undefined) ? "keep" : parameters.flashFreq),
+				flashMode: ((parameters.flashMode === undefined) ? "keep" : parameters.flashMode),
 				eraseAll: false,
 				compress: true,
 				debugLogging: false,
@@ -412,6 +431,8 @@ document.addEventListener('alpine:init', () => {
 				// デバイスを再起動
 				this.writingProgressMessage = "デバイスの再起動中";
 				await espLoader.hardReset();
+				await Utils.wait(500);
+				await espLoader.hardReset();	// 失敗することがあるので２回実行
 
 				// デバイスを切断
 				// タイミングによってはリセット時に切断されるのでハンドリングする
@@ -421,8 +442,7 @@ document.addEventListener('alpine:init', () => {
 				console.log(err);
 			}
 
-
-			Utils.wait(2000);
+			await Utils.wait(2000);
 			return FLASH_ERROR.NONE;
 		},
 
@@ -440,6 +460,7 @@ document.addEventListener('alpine:init', () => {
 				return FLASH_ERROR.CANCELED;
 			}
 			this.flashWriting = true;
+			window.addEventListener("beforeunload", windowUnloadHandler);
 
 			/// DFU モードに切り替えるコード
 			/// ポート番号が変わるので手動切り替え推奨
