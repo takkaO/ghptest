@@ -163,6 +163,14 @@
 						</div>
 					</div>
 
+					<div class="btn btn-secondary card card-size" x-data="{deviceName: 'M5StickC_Plus2'}"
+						@click="goFirmwareSelectPage(deviceName)">
+						<img :src="`./images/Device/${deviceName}.svg`" class="card-img-top device">
+						<div class="card-body p-0">
+							<h5 class="card-title text-center" x-text="deviceName.replace('_', ' ')"></h5>
+						</div>
+					</div>
+
 					<div class="btn btn-secondary card card-size" x-data="{deviceName: 'WioTerminal'}"
 						@click="goFirmwareSelectPage(deviceName)">
 						<img :src="`./images/Device/${deviceName}.svg`" class="card-img-top device">
