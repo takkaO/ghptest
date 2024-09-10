@@ -199,6 +199,8 @@ document.addEventListener('alpine:init', () => {
 				// Fallthrough
 				case "M5StickC_Plus":
 				// Fallthrough
+				case "M5StickC_Plus2":
+				// Fallthrough
 				case "M5Atom_S3":
 				// Fallthrough
 				case "M5Station":
