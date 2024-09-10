@@ -102,6 +102,21 @@ function getParameters(deviceName) {
 			}
 			return parameters;
 		}
+		case "M5StickC_Plus2": {
+			const parameters = {
+				offset: {
+					bootloader: 0x1000,
+					partitions: 0x8000,
+					boot_app0: 0xe000,
+					main: 0x10000
+				},
+				flashSize: "8MB",
+				flashMode: "DIO",
+				flashFreq: "80m",
+				baudrate: 1500000,
+			}
+			return parameters;
+		}
 		case "M5Atom_S3": {
 			const parameters = {
 				offset: {
