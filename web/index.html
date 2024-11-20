@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="format-detection" content="telephone=no">
 	<meta name="msapplication-tap-highlight" content="no">
-	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="mobile-web-app-capable" content="yes" />
 	<meta name="viewport"
 		content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
 
@@ -73,11 +73,11 @@
 						</button>
 						<ul class="dropdown-menu dropdown-menu-end z-3">
 							<!-- <li>
-							<button type="button" class="btn dropdown-item" @click="test()">
-								<i class="bi bi-bug-fill"></i>
-								テスト
-							</button>
-						</li> -->
+								<button type="button" class="btn dropdown-item" @click="test()">
+									<i class="bi bi-bug-fill"></i>
+									テスト
+								</button>
+							</li> -->
 							<li>
 								<button type="button" class="btn dropdown-item" @click="aboutThisSite()">
 									<i class="bi bi-info-circle"></i>
@@ -198,8 +198,7 @@
 								<select class="form-select form-select-lg fw-bold h-auto" x-model="selectedFirmware"
 									@change="changeTargetFirmware">
 									<template x-for="fwName in selectableFirmwareName">
-										<option :value="fwName" x-text="fwName.replace('_', ' ')"
-											:selected="fwName === selectedFirmware"></option>
+										<option :value="fwName" x-text="fwName.replaceAll('_', ' ')"></option>
 									</template>
 								</select>
 								<label>書き込むソフトウェア</label>
@@ -208,7 +207,7 @@
 							<div class="form-floating mt-2 mb-3 underline">
 								<select class="form-select form-select-lg fw-bold h-auto" x-model="selectedVersion">
 									<template x-for="fwVersion in selectableFirmwareVersion">
-										<option x-text="fwVersion" :selected="fwVersion === selectedVersion"></option>
+										<option :value="fwVersion" x-text="fwVersion"></option>
 									</template>
 								</select>
 								<label>ソフトウェアバージョン</label>

@@ -93,7 +93,11 @@ document.addEventListener('alpine:init', () => {
 		async changeTargetFirmware() {
 			// 選択可能なバージョンをファームウェアに合わせて変更
 			this.selectableFirmwareVersion = this.firmwareInfo[this.selectedDeviceName][this.selectedFirmware];
-			this.selectedVersion = this.selectableFirmwareVersion.at(-1);	// 最後の要素を選択状態に
+
+			// 描画が完了してから初期選択要素を設定する
+			this.$nextTick(() => {
+				this.selectedVersion = this.selectableFirmwareVersion.at(-1);	// 最後の要素を選択状態に
+			});
 
 			// CHANGELOG.md の確認
 			await this.checkChangeLog(this.selectedDeviceName, this.selectedFirmware);
@@ -111,7 +115,7 @@ document.addEventListener('alpine:init', () => {
 			this.selectedFirmware = this.selectableFirmwareName.at(this.selectableFirmwareName.indexOf("IoT_Device"));
 
 			// CHANGELOG.md の確認
-			this.checkChangeLog(this.selectedDeviceName, this.selectedFirmware);
+			await this.checkChangeLog(this.selectedDeviceName, this.selectedFirmware);
 
 			// 選択可能なバージョンをファームウェアに合わせてセット
 			this.selectableFirmwareVersion = this.firmwareInfo[this.selectedDeviceName][this.selectedFirmware];
