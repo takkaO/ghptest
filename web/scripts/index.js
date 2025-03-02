@@ -208,6 +208,10 @@ document.addEventListener('alpine:init', () => {
 				case "M5Atom_S3":
 				// Fallthrough
 				case "M5Station":
+				// Fallthrough
+				case "M5Atom_S3R":
+				// Fallthrough
+				case "LilyGo_T-Display_S3_Pro":
 					errNo = await this.writeToEsp32(parameters);
 					break;
 				default:

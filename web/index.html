@@ -103,7 +103,7 @@
 						@click="goFirmwareSelectPage(deviceName)">
 						<img :src="`./images/Device/${deviceName}.svg`" class="card-img-top device">
 						<div class="card-body p-0">
-							<h5 class="card-title text-center" x-text="deviceName.replace('_', ' ')"></h5>
+							<h5 class="card-title text-center" x-text="deviceName.replaceAll('_', ' ')"></h5>
 						</div>
 					</div>
 
@@ -111,7 +111,15 @@
 						@click="goFirmwareSelectPage(deviceName)">
 						<img :src="`./images/Device/${deviceName}.svg`" class="card-img-top device m-auto w-75">
 						<div class="card-body p-0" style="display: contents;">
-							<h5 class="card-title text-center" x-text="deviceName.replace('_', ' ')"></h5>
+							<h5 class="card-title text-center" x-text="deviceName.replaceAll('_', ' ')"></h5>
+						</div>
+					</div>
+
+					<div class="btn btn-secondary card card-size" x-data="{deviceName: 'M5Atom_S3R'}"
+						@click="goFirmwareSelectPage(deviceName)">
+						<img :src="`./images/Device/${deviceName}.svg`" class="card-img-top device m-auto w-75">
+						<div class="card-body p-0" style="display: contents;">
+							<h5 class="card-title text-center" x-text="deviceName.replaceAll('_', ' ')"></h5>
 						</div>
 					</div>
 
@@ -119,7 +127,7 @@
 						@click="goFirmwareSelectPage(deviceName)">
 						<img :src="`./images/Device/${deviceName}.svg`" class="card-img-top device">
 						<div class="card-body p-0">
-							<h5 class="card-title text-center" x-text="deviceName.replace('_', ' ')"></h5>
+							<h5 class="card-title text-center" x-text="deviceName.replaceAll('_', ' ')"></h5>
 						</div>
 					</div>
 
@@ -127,7 +135,7 @@
 						@click="goFirmwareSelectPage(deviceName)">
 						<img :src="`./images/Device/${deviceName}.svg`" class="card-img-top device">
 						<div class="card-body p-0">
-							<h5 class="card-title text-center" x-text="deviceName.replace('_', ' ')"></h5>
+							<h5 class="card-title text-center" x-text="deviceName.replaceAll('_', ' ')"></h5>
 						</div>
 					</div>
 
@@ -135,7 +143,7 @@
 						@click="goFirmwareSelectPage(deviceName)">
 						<img :src="`./images/Device/${deviceName}.svg`" class="card-img-top device">
 						<div class="card-body p-0">
-							<h5 class="card-title text-center" x-text="deviceName.replace('_', ' ')"></h5>
+							<h5 class="card-title text-center" x-text="deviceName.replaceAll('_', ' ')"></h5>
 						</div>
 					</div>
 
@@ -143,7 +151,7 @@
 						@click="goFirmwareSelectPage(deviceName)">
 						<img :src="`./images/Device/${deviceName}.svg`" class="card-img-top device">
 						<div class="card-body p-0">
-							<h5 class="card-title text-center" x-text="deviceName.replace('_', ' ')"></h5>
+							<h5 class="card-title text-center" x-text="deviceName.replaceAll('_', ' ')"></h5>
 						</div>
 					</div>
 
@@ -151,7 +159,7 @@
 						@click="goFirmwareSelectPage(deviceName)">
 						<img :src="`./images/Device/${deviceName}.svg`" class="card-img-top device">
 						<div class="card-body p-0">
-							<h5 class="card-title text-center" x-text="deviceName.replace('_', ' ')"></h5>
+							<h5 class="card-title text-center" x-text="deviceName.replaceAll('_', ' ')"></h5>
 						</div>
 					</div>
 
@@ -159,7 +167,7 @@
 						@click="goFirmwareSelectPage(deviceName)">
 						<img :src="`./images/Device/${deviceName}.svg`" class="card-img-top device">
 						<div class="card-body p-0">
-							<h5 class="card-title text-center" x-text="deviceName.replace('_', ' ')"></h5>
+							<h5 class="card-title text-center" x-text="deviceName.replaceAll('_', ' ')"></h5>
 						</div>
 					</div>
 
@@ -167,7 +175,15 @@
 						@click="goFirmwareSelectPage(deviceName)">
 						<img :src="`./images/Device/${deviceName}.svg`" class="card-img-top device">
 						<div class="card-body p-0">
-							<h5 class="card-title text-center" x-text="deviceName.replace('_', ' ')"></h5>
+							<h5 class="card-title text-center" x-text="deviceName.replaceAll('_', ' ')"></h5>
+						</div>
+					</div>
+
+					<div class="btn btn-secondary card card-size" x-data="{deviceName: 'LilyGo_T-Display_S3_Pro'}"
+						@click="goFirmwareSelectPage(deviceName)">
+						<img :src="`./images/Device/${deviceName}.svg`" class="card-img-top device">
+						<div class="card-body p-0">
+							<h5 class="card-title text-center" x-text="deviceName.replaceAll('_', ' ')"></h5>
 						</div>
 					</div>
 
@@ -175,7 +191,7 @@
 						@click="goFirmwareSelectPage(deviceName)">
 						<img :src="`./images/Device/${deviceName}.svg`" class="card-img-top device">
 						<div class="card-body p-0">
-							<h5 class="card-title text-center" x-text="deviceName.replace('_', ' ')"></h5>
+							<h5 class="card-title text-center" x-text="deviceName.replaceAll('_', ' ')"></h5>
 						</div>
 					</div>
 				</div>
