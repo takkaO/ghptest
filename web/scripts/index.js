@@ -18,6 +18,7 @@ import * as Utils from "./utils.js"
 import * as FlashParameters from "./flashParameters.js"
 import CryptoES from "../modules/crypto-es/lib/index.js"
 import { marked } from "../modules/marked/lib/marked.esm.js"
+import Info from "../modules/package.json" with { type: "json" };
 
 const FLASH_ERROR = Utils.createEnum([
 	"NONE",
@@ -33,6 +34,13 @@ const FLASH_ERROR = Utils.createEnum([
 function windowUnloadHandler(e) {
 	e.preventDefault();
 	e.returnValue = "";
+}
+
+// 実行環境に応じてタイトルを調整
+let g_Title = "YRIT IoT 書き込みツール";
+g_Title += window.inElectronPlatform ? "　ポータブル版" : " WEB版";
+if (window.inElectronPlatform) {
+	document.title = g_Title + `　version ${Info.version}`
 }
 
 document.addEventListener('alpine:init', () => {
@@ -91,6 +99,9 @@ document.addEventListener('alpine:init', () => {
 		},
 
 		async changeTargetFirmware() {
+			// 選択ファームウェアの更新
+			this.selectedFirmware = this.$el.value;
+
 			// 選択可能なバージョンをファームウェアに合わせて変更
 			this.selectableFirmwareVersion = this.firmwareInfo[this.selectedDeviceName][this.selectedFirmware];
 
@@ -103,8 +114,12 @@ document.addEventListener('alpine:init', () => {
 			await this.checkChangeLog(this.selectedDeviceName, this.selectedFirmware);
 		},
 
-		async goFirmwareSelectPage(deviceName) {
-			this.selectedDeviceName = deviceName;
+		changeTargetVersion() {
+			this.selectedVersion = this.$el.value;
+		},
+
+		async goFirmwareSelectPage() {
+			this.selectedDeviceName = this.$el.dataset.device_name;
 
 			this.$refs.page1.classList.add("slide");
 			this.$refs.page2.classList.add("slide");
@@ -142,7 +157,7 @@ document.addEventListener('alpine:init', () => {
 			}
 
 			let respDfuOperate = await fetch(
-				`./images/DFU_Mode/${this.selectedDeviceName}.webp`
+				`./images/dfu_mode/${this.selectedDeviceName}.webp`
 			).then((response) => {
 				if (!response.ok) {
 					return false;
@@ -164,7 +179,7 @@ document.addEventListener('alpine:init', () => {
 							下記の動画を参考にデバイスを操作し、書き込みモードにしてください。
 							準備が完了したら 「準備完了」 ボタンを押してください。
 						</p>
-						<img class="dfu-animation" src="./images/DFU_Mode/${this.selectedDeviceName}.webp">
+						<img class="dfu-animation" src="./images/dfu_mode/${this.selectedDeviceName}.webp">
 					`,
 					// icon: "error",
 					confirmButtonText: '準備完了！',
@@ -640,25 +655,89 @@ document.addEventListener('alpine:init', () => {
 			});
 		},
 
-		// test() {
-		// 	console.log(this.selectableFirmwareVersion);
-		// 	console.log(this.selectedVersion);
-		// },
+		aboutThis() {
+			const w = window.inElectronPlatform ? "ソフトウェア" : " Web サイト";
+			const v = window.inElectronPlatform ? "ソフト" : "サイト";
 
-		aboutThisSite() {
 			let html = /*html*/`
-				<p class="text-start">この Web サイト（以下、当サイト）は研究・実験のために作成されたサイトです。
-				当サイトを利用して発生した、いかなるトラブルに対しても補償はいたしません。</p>
-				<p>自己責任にてご利用ください。</p>
+				<p class="text-start">この${w}（以下、当${v}）は研究・実験のために作成された${v}です。
+				当${v}を利用して発生した、いかなるトラブルに対しても補償はいたしません。
+				自己責任にてご利用ください。</p>
+				<p class="fw-medium">Version ${Info.version}</p>
 			`;
 			Swal.fire({
-				title: "このサイトについて",
+				title: `この${v}について`,
 				html: html,
 				icon: "info",
 				confirmButtonText: '閉じる',
 				confirmButtonColor: "#6c757d"
 			});
-		}
+		},
+
+		// test() {
+		// 	console.log(this.selectableFirmwareVersion);
+		// 	console.log(this.selectedVersion);
+		// },
+
+		/* 以下表示更新用（For Alpine CSP） */
+
+		getFalse() {
+			return false;
+		},
+
+		getTitle() {
+			return g_Title;
+		},
+
+		getDisplayAboutThis() {
+			const v = window.inElectronPlatform ? "ソフト" : "サイト";
+			return `この${v}について`;
+		},
+
+		getDisplayDeviceNameText() {
+			return (this.$el.closest("div[data-device_name]").dataset.device_name).replaceAll('_', ' ');
+		},
+
+		getDisplayDeviceImagePath() {
+			const deviceName = (this.$el.closest("div[data-device_name]").dataset.device_name);
+			return `./images/device/${deviceName}.svg`;
+		},
+
+		getDisplaySelectedDeviceImagePath() {
+			return `./images/device/${this.selectedDeviceName}.svg`;
+		},
+
+		getDisplayFirmwareNameText() {
+			return (this.fwName).replaceAll('_', ' ');
+		},
+
+		getChangeLogIconStyle() {
+			return this.existChangeLog ? '' : 'cursor: not-allowed;';
+		},
+
+		getChangeLogAvailable() {
+			return this.existChangeLog;
+		},
+
+		['!getChangeLogAvailable']() {
+			return !this.existChangeLog;
+		},
+
+		isSelectedFirmware() {
+			return (this.selectedFirmware === this.fwName);
+		},
+
+		isSelectedFirmwareVersion() {
+			return (this.selectedVersion === this.fwVersion);
+		},
+
+		getWritingProgressGage() {
+			return `width: ${this.writingProgress}%`;
+		},
+
+		getDisplayWritingProgressText() {
+			return `${this.writingProgress} %`;
+		},
 	}));
 })
 

@@ -45,3 +45,5 @@ npm run copy-modules
 - [fetch - Alpine JS not correctly update x-model - Stack Overflow](https://stackoverflow.com/questions/62149988/alpine-js-not-correctly-update-x-model)
 - [String と ArrayBuffer の相互変換 JavaScript](https://gist.github.com/kawanet/352a2ed1d1656816b2bc)
 - [ESP Tool](https://espressif.github.io/esptool-js/)
+- [Component properties in Alpine CSP - Hyvä Docs](https://docs.hyva.io/hyva-themes/writing-code/csp/alpine-csp-properties.html#select-and-multiple-select-inputs)
+- [インポート属性 - JavaScript | MDN](https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Statements/import/with)

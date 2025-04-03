@@ -2,293 +2,276 @@
 <html lang="ja">
 
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta name="format-detection" content="telephone=no">
-	<meta name="msapplication-tap-highlight" content="no">
-	<meta name="mobile-web-app-capable" content="yes" />
-	<meta name="viewport"
-		content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="format-detection" content="telephone=no">
+  <meta name="msapplication-tap-highlight" content="no">
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="viewport"
+    content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+  <meta http-equiv="Content-Security-Policy"
+    content="script-src 'self' ; style-src 'self' 'unsafe-inline' ; img-src 'self' data: http://www.w3.org/2000/svg">
 
-	<!-- Bootstrap の読み込み -->
-	<link rel="stylesheet" type="text/css" href="./modules/bootstrap/dist/css/bootstrap.min.css">
-	<script src="./modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Bootstrap の読み込み -->
+  <link rel="stylesheet" type="text/css" href="./modules/bootstrap/dist/css/bootstrap.min.css">
+  <script src="./modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
-	<!-- Bootstrap icons の読み込み -->
-	<link rel="stylesheet" type="text/css" href="./modules/bootstrap-icons/font/bootstrap-icons.min.css">
+  <!-- Bootstrap icons の読み込み -->
+  <link rel="stylesheet" type="text/css" href="./modules/bootstrap-icons/font/bootstrap-icons.min.css">
 
-	<!-- SweetAlert2 の読み込み -->
-	<link rel="stylesheet" type="text/css" href="./modules/sweetalert2/dist/sweetalert2.min.css">
+  <!-- SweetAlert2 の読み込み -->
+  <link rel="stylesheet" type="text/css" href="./modules/sweetalert2/dist/sweetalert2.min.css">
 
-	<!-- Animate.css の読み込み -->
-	<link rel="stylesheet" type="text/css" href="./styles/animate.css/animate.css">
+  <!-- Animate.css の読み込み -->
+  <link rel="stylesheet" type="text/css" href="./styles/animate.css/animate.css">
 
-	<!-- ユーザCSSの読み込み -->
-	<link rel="stylesheet" type="text/css" href="./styles/index.css">
+  <!-- ユーザCSSの読み込み -->
+  <link rel="stylesheet" type="text/css" href="./styles/index.css">
 
-	<link rel="icon" type="image/x-icon" href="./images/Icon/YritIotBurner.ico">
-	<title>YRIT IoT 書き込みツール WEB版</title>
+  <!-- ユーザスクリプトの読み込み（遅延読み込み） -->
+  <script defer type="module" src="./scripts/index.js"></script>
+
+  <link rel="icon" type="image/x-icon" href="./images/icon/yrit_iot_burner.ico">
 </head>
 
 <body class="bg-light">
-	<div x-data="app">
-		<!-- Progress bar panel BEGIN -->
-		<div class="overlay-flash-writing fixed-top" x-show="flashWriting" x-cloak>
-			<div class="card text-center progress-board">
-				<h5 class="card-title">ファームウェア書き込み中</h5>
-				<div class="progress mt-4" role="progressbar" style="height:30px">
-					<div class="progress-bar bg-success progress-bar-striped progress-bar-animated overflow-visible"
-						:style="`width: ${writingProgress}%`" x-text="`${writingProgress} %`"></div>
-				</div>
-				<div class="text-start mt-2 mb-1 ms-2" x-text="writingProgressMessage"></div>
-			</div>
-		</div>
-		<!-- Progress bar panel END -->
+  <div x-data="app">
+    <!-- Progress bar panel BEGIN -->
+    <div class="overlay-flash-writing fixed-top" x-show="flashWriting" x-cloak>
+      <div class="card text-center progress-board">
+        <h5 class="card-title">ファームウェア書き込み中</h5>
+        <div class="progress mt-4" role="progressbar" style="height:30px">
+          <div class="progress-bar bg-success progress-bar-striped progress-bar-animated overflow-visible"
+            :style="getWritingProgressGage" x-text="getDisplayWritingProgressText"></div>
+        </div>
+        <div class="text-start mt-2 mb-1 ms-2" x-text="writingProgressMessage"></div>
+      </div>
+    </div>
+    <!-- Progress bar panel END -->
 
-		<!-- Navigation ber BEGIN -->
-		<nav class="navbar sticky-top bg-yrit-main">
-			<div class="container-fluid">
+    <!-- Navigation ber BEGIN -->
+    <nav class="navbar sticky-top bg-yrit-main">
+      <div class="container-fluid">
 
-				<div class="d-flex flex-row" style="width: 65vw;">
-					<div>
-						<img src="./images/Icon/YritIotBurner.png" alt="Logo" class="mt-1 me-2" width="27px"
-							height="27px">
-					</div>
-					<div class="w-100">
-						<span
-							class="navbar-brand mb-0 h1 d-inline-block w-100 overflow-hidden text-truncate align-middle text-bg-yrit-main">
-							YRIT IoT 書き込みツール　WEB版
-						</span>
-					</div>
-				</div>
+        <div class="d-flex flex-row" style="width: 65vw;">
+          <div>
+            <img src="./images/icon/yrit_iot_burner.png" alt="Logo" class="mt-1 me-2" width="27px" height="27px">
+          </div>
+          <div class="w-100">
+            <span
+              class="navbar-brand mb-0 h1 d-inline-block w-100 overflow-hidden text-truncate align-middle text-bg-yrit-main"
+              x-text="getTitle">
+            </span>
+          </div>
+        </div>
 
 
-				<div class="dropdown">
-					<fieldset :disabled="disableAllForms">
-						<button class="btn btn-light p-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-							<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor"
-								class="bi bi-list" viewBox="0 0 16 16">
-								<path fill-rule="evenodd"
-									d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z" />
-							</svg>
-						</button>
-						<ul class="dropdown-menu dropdown-menu-end z-3">
-							<!-- <li>
-								<button type="button" class="btn dropdown-item" @click="test()">
+        <div class="dropdown">
+          <fieldset :disabled="disableAllForms">
+            <button class="btn btn-light p-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-list"
+                viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                  d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z" />
+              </svg>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end z-3">
+              <!-- <li>
+								<button type="button" class="btn dropdown-item" @click="test">
 									<i class="bi bi-bug-fill"></i>
 									テスト
 								</button>
 							</li> -->
-							<li>
-								<button type="button" class="btn dropdown-item" @click="aboutThisSite()">
-									<i class="bi bi-info-circle"></i>
-									このサイトについて
-								</button>
-							</li>
-						</ul>
-					</fieldset>
-				</div>
-			</div>
-		</nav>
-		<!-- Navigation ber END -->
+              <li>
+                <button type="button" class="btn dropdown-item" @click="aboutThis">
+                  <i class="bi bi-info-circle"></i>
+                  <span x-text="getDisplayAboutThis"></span>
+                </button>
+              </li>
+            </ul>
+          </fieldset>
+        </div>
+      </div>
+    </nav>
+    <!-- Navigation ber END -->
 
-		<div class="loader-panel" x-show="false">
-			<div class="loader"></div>
-			<span class="d-flex justify-content-center mt-3 fs-5 fw-bolder">Loading...</span>
-		</div>
+    <div class="loader-panel" x-show="getFalse">
+      <div class="loader"></div>
+      <span class="d-flex justify-content-center mt-3 fs-5 fw-bolder">Loading...</span>
+    </div>
 
-		<section id="page1" x-ref="page1" class="mt-3" x-cloak>
-			<div class="container-fluid h-100">
-				<div class="my-grid">
-					<div class="btn btn-secondary card card-size" x-data="{deviceName: 'ESP32Devkit'}"
-						@click="goFirmwareSelectPage(deviceName)">
-						<img :src="`./images/Device/${deviceName}.svg`" class="card-img-top device">
-						<div class="card-body p-0">
-							<h5 class="card-title text-center" x-text="deviceName.replaceAll('_', ' ')"></h5>
-						</div>
-					</div>
+    <section id="page1" x-ref="page1" class="mt-3" x-cloak>
+      <div class="container-fluid h-100">
+        <div class="my-grid">
+          <div class="btn btn-secondary card card-size" data-device_name="ESP32Devkit" @click="goFirmwareSelectPage">
+            <img :src="getDisplayDeviceImagePath" class="card-img-top device">
+            <div class="card-body p-0">
+              <h5 class="card-title text-center" x-text="getDisplayDeviceNameText"></h5>
+            </div>
+          </div>
 
-					<div class="btn btn-secondary card card-size" x-data="{deviceName: 'M5Atom_S3'}"
-						@click="goFirmwareSelectPage(deviceName)">
-						<img :src="`./images/Device/${deviceName}.svg`" class="card-img-top device m-auto w-75">
-						<div class="card-body p-0" style="display: contents;">
-							<h5 class="card-title text-center" x-text="deviceName.replaceAll('_', ' ')"></h5>
-						</div>
-					</div>
+          <div class="btn btn-secondary card card-size" data-device_name="M5Atom_S3" @click="goFirmwareSelectPage">
+            <img :src="getDisplayDeviceImagePath" class="card-img-top device m-auto w-75">
+            <div class="card-body p-0" style="display: contents;">
+              <h5 class="card-title text-center" x-text="getDisplayDeviceNameText"></h5>
+            </div>
+          </div>
 
-					<div class="btn btn-secondary card card-size" x-data="{deviceName: 'M5Atom_S3R'}"
-						@click="goFirmwareSelectPage(deviceName)">
-						<img :src="`./images/Device/${deviceName}.svg`" class="card-img-top device m-auto w-75">
-						<div class="card-body p-0" style="display: contents;">
-							<h5 class="card-title text-center" x-text="deviceName.replaceAll('_', ' ')"></h5>
-						</div>
-					</div>
+          <div class="btn btn-secondary card card-size" data-device_name="M5Atom_S3R" @click="goFirmwareSelectPage">
+            <img :src="getDisplayDeviceImagePath" class="card-img-top device m-auto w-75">
+            <div class="card-body p-0" style="display: contents;">
+              <h5 class="card-title text-center" x-text="getDisplayDeviceNameText"></h5>
+            </div>
+          </div>
 
-					<div class="btn btn-secondary card card-size" x-data="{deviceName: 'M5Stack_Basic'}"
-						@click="goFirmwareSelectPage(deviceName)">
-						<img :src="`./images/Device/${deviceName}.svg`" class="card-img-top device">
-						<div class="card-body p-0">
-							<h5 class="card-title text-center" x-text="deviceName.replaceAll('_', ' ')"></h5>
-						</div>
-					</div>
+          <div class="btn btn-secondary card card-size" data-device_name="M5Stack_Basic" @click="goFirmwareSelectPage">
+            <img :src="getDisplayDeviceImagePath" class="card-img-top device">
+            <div class="card-body p-0">
+              <h5 class="card-title text-center" x-text="getDisplayDeviceNameText"></h5>
+            </div>
+          </div>
 
-					<div class="btn btn-secondary card card-size" x-data="{deviceName: 'M5Stack_Core2'}"
-						@click="goFirmwareSelectPage(deviceName)">
-						<img :src="`./images/Device/${deviceName}.svg`" class="card-img-top device">
-						<div class="card-body p-0">
-							<h5 class="card-title text-center" x-text="deviceName.replaceAll('_', ' ')"></h5>
-						</div>
-					</div>
+          <div class="btn btn-secondary card card-size" data-device_name="M5Stack_Core2" @click="goFirmwareSelectPage">
+            <img :src="getDisplayDeviceImagePath" class="card-img-top device">
+            <div class="card-body p-0">
+              <h5 class="card-title text-center" x-text="getDisplayDeviceNameText"></h5>
+            </div>
+          </div>
 
-					<div class="btn btn-secondary card card-size" x-data="{deviceName: 'M5Stack_CoreS3'}"
-						@click="goFirmwareSelectPage(deviceName)">
-						<img :src="`./images/Device/${deviceName}.svg`" class="card-img-top device">
-						<div class="card-body p-0">
-							<h5 class="card-title text-center" x-text="deviceName.replaceAll('_', ' ')"></h5>
-						</div>
-					</div>
+          <div class="btn btn-secondary card card-size" data-device_name="M5Stack_CoreS3" @click="goFirmwareSelectPage">
+            <img :src="getDisplayDeviceImagePath" class="card-img-top device">
+            <div class="card-body p-0">
+              <h5 class="card-title text-center" x-text="getDisplayDeviceNameText"></h5>
+            </div>
+          </div>
 
-					<div class="btn btn-secondary card card-size" x-data="{deviceName: 'M5Stack_Tough'}"
-						@click="goFirmwareSelectPage(deviceName)">
-						<img :src="`./images/Device/${deviceName}.svg`" class="card-img-top device">
-						<div class="card-body p-0">
-							<h5 class="card-title text-center" x-text="deviceName.replaceAll('_', ' ')"></h5>
-						</div>
-					</div>
+          <div class="btn btn-secondary card card-size" data-device_name="M5Stack_Tough" @click="goFirmwareSelectPage">
+            <img :src="getDisplayDeviceImagePath" class="card-img-top device">
+            <div class="card-body p-0">
+              <h5 class="card-title text-center" x-text="getDisplayDeviceNameText"></h5>
+            </div>
+          </div>
 
-					<div class="btn btn-secondary card card-size" x-data="{deviceName: 'M5Station'}"
-						@click="goFirmwareSelectPage(deviceName)">
-						<img :src="`./images/Device/${deviceName}.svg`" class="card-img-top device">
-						<div class="card-body p-0">
-							<h5 class="card-title text-center" x-text="deviceName.replaceAll('_', ' ')"></h5>
-						</div>
-					</div>
+          <div class="btn btn-secondary card card-size" data-device_name="M5Station" @click="goFirmwareSelectPage">
+            <img :src="getDisplayDeviceImagePath" class="card-img-top device">
+            <div class="card-body p-0">
+              <h5 class="card-title text-center" x-text="getDisplayDeviceNameText"></h5>
+            </div>
+          </div>
 
-					<div class="btn btn-secondary card card-size" x-data="{deviceName: 'M5StickC_Plus'}"
-						@click="goFirmwareSelectPage(deviceName)">
-						<img :src="`./images/Device/${deviceName}.svg`" class="card-img-top device">
-						<div class="card-body p-0">
-							<h5 class="card-title text-center" x-text="deviceName.replaceAll('_', ' ')"></h5>
-						</div>
-					</div>
+          <div class="btn btn-secondary card card-size" data-device_name="M5StickC_Plus" @click="goFirmwareSelectPage">
+            <img :src="getDisplayDeviceImagePath" class="card-img-top device">
+            <div class="card-body p-0">
+              <h5 class="card-title text-center" x-text="getDisplayDeviceNameText"></h5>
+            </div>
+          </div>
 
-					<div class="btn btn-secondary card card-size" x-data="{deviceName: 'M5StickC_Plus2'}"
-						@click="goFirmwareSelectPage(deviceName)">
-						<img :src="`./images/Device/${deviceName}.svg`" class="card-img-top device">
-						<div class="card-body p-0">
-							<h5 class="card-title text-center" x-text="deviceName.replaceAll('_', ' ')"></h5>
-						</div>
-					</div>
+          <div class="btn btn-secondary card card-size" data-device_name="M5StickC_Plus2" @click="goFirmwareSelectPage">
+            <img :src="getDisplayDeviceImagePath" class="card-img-top device">
+            <div class="card-body p-0">
+              <h5 class="card-title text-center" x-text="getDisplayDeviceNameText"></h5>
+            </div>
+          </div>
 
-					<div class="btn btn-secondary card card-size" x-data="{deviceName: 'LilyGo_T-Display_S3_Pro'}"
-						@click="goFirmwareSelectPage(deviceName)">
-						<img :src="`./images/Device/${deviceName}.svg`" class="card-img-top device">
-						<div class="card-body p-0">
-							<h5 class="card-title text-center" x-text="deviceName.replaceAll('_', ' ')"></h5>
-						</div>
-					</div>
+          <div class="btn btn-secondary card card-size" data-device_name="LilyGo_T-Display_S3_Pro"
+            @click="goFirmwareSelectPage">
+            <img :src="getDisplayDeviceImagePath" class="card-img-top device">
+            <div class="card-body p-0">
+              <h5 class="card-title text-center" x-text="getDisplayDeviceNameText"></h5>
+            </div>
+          </div>
 
-					<div class="btn btn-secondary card card-size" x-data="{deviceName: 'WioTerminal'}"
-						@click="goFirmwareSelectPage(deviceName)">
-						<img :src="`./images/Device/${deviceName}.svg`" class="card-img-top device">
-						<div class="card-body p-0">
-							<h5 class="card-title text-center" x-text="deviceName.replaceAll('_', ' ')"></h5>
-						</div>
-					</div>
-				</div>
-			</div>
-		</section>
+          <div class="btn btn-secondary card card-size" data-device_name="WioTerminal" @click="goFirmwareSelectPage">
+            <img :src="getDisplayDeviceImagePath" class="card-img-top device">
+            <div class="card-body p-0">
+              <h5 class="card-title text-center" x-text="getDisplayDeviceNameText"></h5>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-		<section id="page2" x-ref="page2" x-cloak>
-			<div class="container-xxl h-100">
+    <section id="page2" x-ref="page2" x-cloak>
+      <div class="container-xxl h-100">
 
-				<div class="row d-grid justify-content-center">
-					<div class="col p-3 align-self-center">
-						<img :src="`./images/Device/${selectedDeviceName}.svg`" class="p-4 target-device-image">
-					</div>
-				</div>
+        <div class="row d-grid justify-content-center">
+          <div class="col p-3 align-self-center">
+            <img :src="getDisplaySelectedDeviceImagePath" class="p-4 target-device-image">
+          </div>
+        </div>
 
-				<fieldset :disabled="disableAllForms">
-					<div class="row selector  flex-nowrap">
-						<div class="col-10">
-							<div class="form-floating mt-2 mb-3 underline">
-								<select class="form-select form-select-lg fw-bold h-auto" x-model="selectedFirmware"
-									@change="changeTargetFirmware">
-									<template x-for="fwName in selectableFirmwareName">
-										<option :value="fwName" x-text="fwName.replaceAll('_', ' ')"></option>
-									</template>
-								</select>
-								<label>書き込むソフトウェア</label>
-							</div>
+        <fieldset :disabled="disableAllForms">
+          <div class="row selector  flex-nowrap">
+            <div class="col-10">
+              <div class="form-floating mt-2 mb-3 underline">
+                <select class="form-select form-select-lg fw-bold h-auto" @change="changeTargetFirmware">
+                  <template x-for="fwName in selectableFirmwareName">
+                    <option :value="fwName" :selected="isSelectedFirmware" x-text="getDisplayFirmwareNameText"></option>
+                  </template>
+                </select>
+                <label>書き込むソフトウェア</label>
+              </div>
 
-							<div class="form-floating mt-2 mb-3 underline">
-								<select class="form-select form-select-lg fw-bold h-auto" x-model="selectedVersion">
-									<template x-for="fwVersion in selectableFirmwareVersion">
-										<option :value="fwVersion" x-text="fwVersion"></option>
-									</template>
-								</select>
-								<label>ソフトウェアバージョン</label>
-							</div>
-						</div>
+              <div class="form-floating mt-2 mb-3 underline">
+                <select class="form-select form-select-lg fw-bold h-auto" @change="changeTargetVersion">
+                  <template x-for="fwVersion in selectableFirmwareVersion">
+                    <option :value="fwVersion" :selected="isSelectedFirmwareVersion" x-text="fwVersion"></option>
+                  </template>
+                </select>
+                <label>ソフトウェアバージョン</label>
+              </div>
+            </div>
 
+            <div class="col-2 mt-2 ps-0 changelog" :title="changeLogHoverMessage" :style="getChangeLogIconStyle">
+              <button class="btn btn-lg changelog-btn" type="button" @click="showChangeLog"
+                :disabled="!getChangeLogAvailable">
+                <svg x-show="getChangeLogAvailable" xmlns="http://www.w3.org/2000/svg" width="36" height="36"
+                  fill="currentColor" class="bi bi-clipboard-check" viewBox="1 0 16 16">
+                  <path fill-rule="evenodd"
+                    d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z" />
+                  <path
+                    d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z" />
+                  <path
+                    d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z" />
+                </svg>
 
-						<div class="col-2 mt-2 ps-0 changelog" :title="changeLogHoverMessage"
-							:style="existChangeLog ? '' : 'cursor: not-allowed;'">
-							<button class="btn btn-lg changelog-btn" type="button" @click="showChangeLog()"
-								:disabled="!existChangeLog">
-								<svg x-show="existChangeLog" xmlns="http://www.w3.org/2000/svg" width="36" height="36"
-									fill="currentColor" class="bi bi-clipboard-check" viewBox="1 0 16 16">
-									<path fill-rule="evenodd"
-										d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z" />
-									<path
-										d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z" />
-									<path
-										d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z" />
-								</svg>
+                <svg x-show="!getChangeLogAvailable" xmlns="http://www.w3.org/2000/svg" width="36" height="36"
+                  fill="currentColor" class="bi bi-clipboard-x" viewBox="1 0 16 16">
+                  <path fill-rule="evenodd"
+                    d="M6.146 7.146a.5.5 0 0 1 .708 0L8 8.293l1.146-1.147a.5.5 0 1 1 .708.708L8.707 9l1.147 1.146a.5.5 0 0 1-.708.708L8 9.707l-1.146 1.147a.5.5 0 0 1-.708-.708L7.293 9 6.146 7.854a.5.5 0 0 1 0-.708z" />
+                  <path
+                    d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z" />
+                  <path
+                    d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z" />
+                </svg>
+              </button>
+            </div>
+          </div>
 
-								<svg x-show="!existChangeLog" xmlns="http://www.w3.org/2000/svg" width="36" height="36"
-									fill="currentColor" class="bi bi-clipboard-x" viewBox="1 0 16 16">
-									<path fill-rule="evenodd"
-										d="M6.146 7.146a.5.5 0 0 1 .708 0L8 8.293l1.146-1.147a.5.5 0 1 1 .708.708L8.707 9l1.147 1.146a.5.5 0 0 1-.708.708L8 9.707l-1.146 1.147a.5.5 0 0 1-.708-.708L7.293 9 6.146 7.854a.5.5 0 0 1 0-.708z" />
-									<path
-										d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z" />
-									<path
-										d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z" />
-								</svg>
-							</button>
-						</div>
+          <div class="row justify-content-around mt-5 width-limit">
+            <div class="col d-grid">
+              <div class="left-arrow-outsite" @click="goDeviceSelectPage">
+                <button class="left-arrow-inside">
+                  <span
+                    class="d-flex ps-4 pe-1 h-100 align-items-center justify-content-center text-dark fw-bolder responsive-font-size">
+                    デバイス選択へ戻る
+                  </span>
+                </button>
+              </div>
+            </div>
 
-					</div>
-
-					<div class="row justify-content-around mt-5 width-limit">
-						<div class="col d-grid">
-							<div class="left-arrow-outsite" @click="goDeviceSelectPage()">
-								<button class="left-arrow-inside">
-									<span
-										class="d-flex ps-4 pe-1 h-100 align-items-center justify-content-center text-dark fw-bolder responsive-font-size">
-										デバイス選択へ戻る
-									</span>
-								</button>
-							</div>
-						</div>
-
-						<div class="col d-grid">
-							<div class="ms-auto outline-outsite" @click="runFirmwareWrite()">
-								<button class="outline-inside">
-									<span
-										class="d-flex h-100 align-items-center justify-content-center text-dark fw-bolder responsive-font-size">
-										書き込み開始
-									</span>
-								</button>
-							</div>
-						</div>
-					</div>
-
-				</fieldset>
-
-			</div>
-		</section>
-
-	</div>
-
-	<script type="module" src="./scripts/index.js" defer></script>
+            <div class="col d-grid">
+              <div class="ms-auto outline-outsite" @click="runFirmwareWrite">
+                <button class="outline-inside">
+                  <span
+                    class="d-flex h-100 align-items-center justify-content-center text-dark fw-bolder responsive-font-size">
+                    書き込み開始
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+    </section>
+  </div>
 </body>
