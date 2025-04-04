@@ -23,8 +23,8 @@ jobs:
           TZ: 'Asia/Tokyo' # Set timezone
         run: echo "CURRENT_DATETIME=$(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
 
-      - name: restore --source code
-        uses: actions/restore --source@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
