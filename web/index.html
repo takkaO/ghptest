@@ -102,77 +102,44 @@
     <section id="page1" x-ref="page1" class="mt-3" x-cloak>
       <div class="container-fluid h-100">
         <div class="my-grid">
-          <div class="btn btn-secondary card card-size" data-device_name="ESP32Devkit" @click="goFirmwareSelectPage">
+          <div class="btn btn-secondary card card-size" data-device_name="esp32_devkit" @click="goFirmwareSelectPage">
             <img :src="getDisplayDeviceImagePath" class="card-img-top device">
             <div class="card-body p-0">
               <h5 class="card-title text-center" x-text="getDisplayDeviceNameText"></h5>
             </div>
           </div>
 
-          <div class="btn btn-secondary card card-size" data-device_name="M5Atom_S3" @click="goFirmwareSelectPage">
+          <div class="btn btn-secondary card card-size" data-device_name="m5stack_atom_s3"
+            @click="goFirmwareSelectPage">
             <img :src="getDisplayDeviceImagePath" class="card-img-top device m-auto w-75">
             <div class="card-body p-0" style="display: contents;">
               <h5 class="card-title text-center" x-text="getDisplayDeviceNameText"></h5>
             </div>
           </div>
 
-          <div class="btn btn-secondary card card-size" data-device_name="M5Atom_S3R" @click="goFirmwareSelectPage">
+          <div class="btn btn-secondary card card-size" data-device_name="m5stack_atom_s3r"
+            @click="goFirmwareSelectPage">
             <img :src="getDisplayDeviceImagePath" class="card-img-top device m-auto w-75">
             <div class="card-body p-0" style="display: contents;">
               <h5 class="card-title text-center" x-text="getDisplayDeviceNameText"></h5>
             </div>
           </div>
 
-          <div class="btn btn-secondary card card-size" data-device_name="M5Stack_Basic" @click="goFirmwareSelectPage">
+          <div class="btn btn-secondary card card-size" data-device_name="m5stack_basic" @click="goFirmwareSelectPage">
             <img :src="getDisplayDeviceImagePath" class="card-img-top device">
             <div class="card-body p-0">
               <h5 class="card-title text-center" x-text="getDisplayDeviceNameText"></h5>
             </div>
           </div>
 
-          <div class="btn btn-secondary card card-size" data-device_name="M5Stack_Core2" @click="goFirmwareSelectPage">
+          <div class="btn btn-secondary card card-size" data-device_name="m5stack_core2" @click="goFirmwareSelectPage">
             <img :src="getDisplayDeviceImagePath" class="card-img-top device">
             <div class="card-body p-0">
               <h5 class="card-title text-center" x-text="getDisplayDeviceNameText"></h5>
             </div>
           </div>
 
-          <div class="btn btn-secondary card card-size" data-device_name="M5Stack_CoreS3" @click="goFirmwareSelectPage">
-            <img :src="getDisplayDeviceImagePath" class="card-img-top device">
-            <div class="card-body p-0">
-              <h5 class="card-title text-center" x-text="getDisplayDeviceNameText"></h5>
-            </div>
-          </div>
-
-          <div class="btn btn-secondary card card-size" data-device_name="M5Stack_Tough" @click="goFirmwareSelectPage">
-            <img :src="getDisplayDeviceImagePath" class="card-img-top device">
-            <div class="card-body p-0">
-              <h5 class="card-title text-center" x-text="getDisplayDeviceNameText"></h5>
-            </div>
-          </div>
-
-          <div class="btn btn-secondary card card-size" data-device_name="M5Station" @click="goFirmwareSelectPage">
-            <img :src="getDisplayDeviceImagePath" class="card-img-top device">
-            <div class="card-body p-0">
-              <h5 class="card-title text-center" x-text="getDisplayDeviceNameText"></h5>
-            </div>
-          </div>
-
-          <div class="btn btn-secondary card card-size" data-device_name="M5StickC_Plus" @click="goFirmwareSelectPage">
-            <img :src="getDisplayDeviceImagePath" class="card-img-top device">
-            <div class="card-body p-0">
-              <h5 class="card-title text-center" x-text="getDisplayDeviceNameText"></h5>
-            </div>
-          </div>
-
-          <div class="btn btn-secondary card card-size" data-device_name="M5StickC_Plus2" @click="goFirmwareSelectPage">
-            <img :src="getDisplayDeviceImagePath" class="card-img-top device">
-            <div class="card-body p-0">
-              <h5 class="card-title text-center" x-text="getDisplayDeviceNameText"></h5>
-            </div>
-          </div>
-
-          <div class="btn btn-secondary card card-size" data-device_name="LilyGo_T-Display_S3_Pro"
+          <div class="btn btn-secondary card card-size" data-device_name="m5stack_core_s3"
             @click="goFirmwareSelectPage">
             <img :src="getDisplayDeviceImagePath" class="card-img-top device">
             <div class="card-body p-0">
@@ -180,7 +147,52 @@
             </div>
           </div>
 
-          <div class="btn btn-secondary card card-size" data-device_name="WioTerminal" @click="goFirmwareSelectPage">
+          <div class="btn btn-secondary card card-size" data-device_name="m5stack_core_s3_se"
+            @click="goFirmwareSelectPage">
+            <img :src="getDisplayDeviceImagePath" class="card-img-top device">
+            <div class="card-body p-0">
+              <h5 class="card-title text-center" x-text="getDisplayDeviceNameText"></h5>
+            </div>
+          </div>
+
+          <div class="btn btn-secondary card card-size" data-device_name="m5stack_tough" @click="goFirmwareSelectPage">
+            <img :src="getDisplayDeviceImagePath" class="card-img-top device">
+            <div class="card-body p-0">
+              <h5 class="card-title text-center" x-text="getDisplayDeviceNameText"></h5>
+            </div>
+          </div>
+
+          <div class="btn btn-secondary card card-size" data-device_name="m5station" @click="goFirmwareSelectPage">
+            <img :src="getDisplayDeviceImagePath" class="card-img-top device">
+            <div class="card-body p-0">
+              <h5 class="card-title text-center" x-text="getDisplayDeviceNameText"></h5>
+            </div>
+          </div>
+
+          <div class="btn btn-secondary card card-size" data-device_name="m5stick_c_plus" @click="goFirmwareSelectPage">
+            <img :src="getDisplayDeviceImagePath" class="card-img-top device">
+            <div class="card-body p-0">
+              <h5 class="card-title text-center" x-text="getDisplayDeviceNameText"></h5>
+            </div>
+          </div>
+
+          <div class="btn btn-secondary card card-size" data-device_name="m5stick_c_plus2"
+            @click="goFirmwareSelectPage">
+            <img :src="getDisplayDeviceImagePath" class="card-img-top device">
+            <div class="card-body p-0">
+              <h5 class="card-title text-center" x-text="getDisplayDeviceNameText"></h5>
+            </div>
+          </div>
+
+          <div class="btn btn-secondary card card-size" data-device_name="lilygo_t_display_s3_pro"
+            @click="goFirmwareSelectPage">
+            <img :src="getDisplayDeviceImagePath" class="card-img-top device">
+            <div class="card-body p-0">
+              <h5 class="card-title text-center" x-text="getDisplayDeviceNameText"></h5>
+            </div>
+          </div>
+
+          <div class="btn btn-secondary card card-size" data-device_name="wio_terminal" @click="goFirmwareSelectPage">
             <img :src="getDisplayDeviceImagePath" class="card-img-top device">
             <div class="card-body p-0">
               <h5 class="card-title text-center" x-text="getDisplayDeviceNameText"></h5>

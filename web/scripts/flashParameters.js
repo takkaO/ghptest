@@ -12,7 +12,7 @@ Author: takkaO
 
 function getParameters(deviceName) {
 	switch (deviceName) {
-		case "ESP32Devkit": {
+		case "esp32_devkit": {
 			const parameters = {
 				offset: {
 					bootloader: 0x1000,
@@ -27,7 +27,7 @@ function getParameters(deviceName) {
 			}
 			return parameters;
 		}
-		case "M5Stack_Basic": {
+		case "m5stack_basic": {
 			const parameters = {
 				offset: {
 					bootloader: 0x1000,
@@ -42,7 +42,7 @@ function getParameters(deviceName) {
 			}
 			return parameters;
 		}
-		case "M5Stack_Core2": {
+		case "m5stack_core2": {
 			const parameters = {
 				offset: {
 					bootloader: 0x1000,
@@ -57,7 +57,7 @@ function getParameters(deviceName) {
 			}
 			return parameters;
 		}
-		case "M5Stack_CoreS3": {
+		case "m5stack_core_s3": {
 			const parameters = {
 				offset: {
 					bootloader: 0x0,
@@ -72,7 +72,22 @@ function getParameters(deviceName) {
 			}
 			return parameters;
 		}
-		case "M5Stack_Tough": {
+		case "m5stack_core_s3_se": {
+			const parameters = {
+				offset: {
+					bootloader: 0x0,
+					partitions: 0x8000,
+					boot_app0: 0xe000,
+					main: 0x10000
+				},
+				flashSize: "16MB",
+				flashMode: "DIO",
+				flashFreq: "80m",
+				baudrate: 1500000, //921600,
+			}
+			return parameters;
+		}
+		case "m5stack_tough": {
 			const parameters = {
 				offset: {
 					bootloader: 0x1000,
@@ -87,7 +102,7 @@ function getParameters(deviceName) {
 			}
 			return parameters;
 		}
-		case "M5StickC_Plus": {
+		case "m5stick_c_plus": {
 			const parameters = {
 				offset: {
 					bootloader: 0x1000,
@@ -102,7 +117,7 @@ function getParameters(deviceName) {
 			}
 			return parameters;
 		}
-		case "M5StickC_Plus2": {
+		case "m5stick_c_plus2": {
 			const parameters = {
 				offset: {
 					bootloader: 0x1000,
@@ -117,7 +132,7 @@ function getParameters(deviceName) {
 			}
 			return parameters;
 		}
-		case "M5Atom_S3": {
+		case "m5stack_atom_s3": {
 			const parameters = {
 				offset: {
 					bootloader: 0x0,
@@ -132,7 +147,7 @@ function getParameters(deviceName) {
 			}
 			return parameters;
 		}
-		case "M5Atom_S3R": {
+		case "m5stack_atom_s3r": {
 			const parameters = {
 				offset: {
 					bootloader: 0x0,
@@ -147,7 +162,7 @@ function getParameters(deviceName) {
 			}
 			return parameters;
 		}
-		case "M5Station": {
+		case "m5station": {
 			const parameters = {
 				offset: {
 					bootloader: 0x1000,
@@ -162,7 +177,7 @@ function getParameters(deviceName) {
 			}
 			return parameters;
 		}
-		case "LilyGo_T-Display_S3_Pro": {
+		case "lilygo_t_display_s3_pro": {
 			const parameters = {
 				offset: {
 					bootloader: 0x0,

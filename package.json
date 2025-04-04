@@ -24,8 +24,7 @@
     "electron": "electron.cmd .",
     "init-electron": "npm-run-all --parallel electron-cp-*",
     "electron-cp-alpinejs": "cpx \"./node_modules/@alpinejs/csp/**\" \"./electron/modules/alpinejs\" ",
-    "electron-cp-bootstrap": "cpx \"./node_modules/bootstrap/**\" \"./electron/modules/bootstrap\" ",
-    "electron-cp-package-json": "cpx \"./package.json\" \"./electron/modules\" "
+    "electron-cp-bootstrap": "cpx \"./node_modules/bootstrap/**\" \"./electron/modules/bootstrap\" "
   },
   "author": "takkaO",
   "license": "AGPL-3.0-only",

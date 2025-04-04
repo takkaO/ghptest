@@ -202,31 +202,33 @@ document.addEventListener('alpine:init', () => {
 			const parameters = FlashParameters.getParameters(this.selectedDeviceName);
 			let errNo = FLASH_ERROR.CANCELED;
 			switch (this.selectedDeviceName) {
-				case "WioTerminal": {
+				case "wio_terminal": {
 					errNo = await this.writeToWioTerminal();
 					break;
 				}
-				case "ESP32Devkit":
+				case "esp32_devkit":
 				// Fallthrough
-				case "M5Stack_Basic":
+				case "m5stack_basic":
 				// Fallthrough
-				case "M5Stack_Core2":
+				case "m5stack_core2":
 				// Fallthrough
-				case "M5Stack_CoreS3":
+				case "m5stack_core_s3":
 				// Fallthrough
-				case "M5Stack_Tough":
+				case "m5stack_tough":
 				// Fallthrough
-				case "M5StickC_Plus":
+				case "m5stick_c_plus":
 				// Fallthrough
-				case "M5StickC_Plus2":
+				case "m5stick_c_plus2":
 				// Fallthrough
-				case "M5Atom_S3":
+				case "m5stack_atom_s3":
 				// Fallthrough
-				case "M5Station":
+				case "m5station":
 				// Fallthrough
-				case "M5Atom_S3R":
+				case "m5stack_atom_s3r":
 				// Fallthrough
-				case "LilyGo_T-Display_S3_Pro":
+				case "lilygo_t_display_s3_pro":
+				// Fallthrough
+				case "m5stack_core_s3_se":
 					errNo = await this.writeToEsp32(parameters);
 					break;
 				default:
@@ -407,7 +409,7 @@ document.addEventListener('alpine:init', () => {
 				{ data: mainBinary, address: parameters.offset["main"] }
 			];
 
-			this.writingProgress = 5;
+			this.writingProgress = 1;
 
 			// 書き込みオプションとコールバックを宣言
 			const flashOptions = {
@@ -422,16 +424,16 @@ document.addEventListener('alpine:init', () => {
 					console.log("Progress: ", fileIndex, Math.trunc((written / total) * 100));
 					switch (fileIndex) {
 						case 0:
-							this.writingProgress = 6;
+							this.writingProgress = 1;
 							break;
 						case 1:
-							this.writingProgress = 8;
+							this.writingProgress = 1;
 							break;
 						case 2:
-							this.writingProgress = 10;
+							this.writingProgress = 2;
 							break;
 						default:
-							this.writingProgress = (((written / total) * 100) - 10) < 0 ? 10 : Math.trunc((written / total) * 100);
+							this.writingProgress = (((written / total) * 100) - 2) < 0 ? 2 : Math.trunc((written / total) * 100);
 							break;
 					}
 				},
@@ -455,15 +457,18 @@ document.addEventListener('alpine:init', () => {
 			try {
 				// デバイスを再起動
 				this.writingProgressMessage = "デバイスの再起動中";
-				await espLoader.hardReset();
+				await new EspTool.ClassicReset(transport).reset();
+				//await espLoader.hardReset();
 				await Utils.wait(500);
-				await espLoader.hardReset();	// 失敗することがあるので２回実行
+				//await espLoader.hardReset();
+				await new EspTool.ClassicReset(transport).reset();	// 失敗することがあるので２回実行
 
 				// デバイスを切断
 				// タイミングによってはリセット時に切断されるのでハンドリングする
 				await transport.disconnect();
 				//await serialPort.close();
 			} catch (err) {
+				await transport.disconnect();
 				console.log(err);
 			}
 
@@ -695,7 +700,24 @@ document.addEventListener('alpine:init', () => {
 		},
 
 		getDisplayDeviceNameText() {
-			return (this.$el.closest("div[data-device_name]").dataset.device_name).replaceAll('_', ' ');
+			let deviceName = this.$el.closest("div[data-device_name]").dataset.device_name;
+			// 特別な語句をあらかじめ置換
+			const exceptions = {
+				"esp32": "ESP32",
+				"lilygo_t_display": "LilyGo_T-Display",
+				"se": "SE"
+			};
+
+			// 例外語句の置換
+			for (const [key, value] of Object.entries(exceptions)) {
+				// 小文字限定で置換（大文字/混在対応が必要なら工夫する）
+				const re = new RegExp(key, "g");
+				deviceName = deviceName.replace(re, value);
+			}
+
+			// 通常の大文字化ルール適用
+			deviceName = deviceName.replace(/(^\w|_\w|\d\w)/g, match => match.toUpperCase());
+			return deviceName.replaceAll('_', ' ');
 		},
 
 		getDisplayDeviceImagePath() {
