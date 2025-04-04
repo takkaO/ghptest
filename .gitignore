@@ -6,3 +6,5 @@
 /web/styles/animate.css
 /web/firmwares.json
 /electron/modules
+
+.env
