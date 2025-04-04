@@ -1,0 +1,10 @@
+/node_modules
+/web/modules
+/web/firmwares/*
+
+!/web/firmwares/.gitkeep
+/web/styles/animate.css
+/web/firmwares.json
+/electron/modules
+
+.env

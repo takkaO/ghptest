@@ -1,0 +1,3 @@
+[submodule "bossa-web"]
+	path = bossa-web
+	url = https://github.com/takkaO/bossa-web.git
