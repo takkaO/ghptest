@@ -4,6 +4,7 @@ on:
   push: 
     branches:
       - master
+  workflow_dispatch:
 
 env:
   DOCUMENT_BRANCH: "gh-pages"
@@ -22,8 +23,8 @@ jobs:
           TZ: 'Asia/Tokyo' # Set timezone
         run: echo "CURRENT_DATETIME=$(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
 
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: restore --source code
+        uses: actions/restore --source@v3
         with:
           fetch-depth: 0
 
@@ -35,14 +36,14 @@ jobs:
       
       - name: Switch branch
         run: | # ブランチが無い場合は新規作成し、ある場合は切り替える
-          git switch $DOCUMENT_BRANCH 2>/dev/null || git switch --orphan $DOCUMENT_BRANCH
+          git switch ${{ env.DOCUMENT_BRANCH }} 2>/dev/null || git switch --orphan ${{ env.DOCUMENT_BRANCH }}
       
       - name: Copy files
         run: |
-          git checkout master -- web
-          git checkout master -- bossa-web
-          git checkout master -- .gitmodules
-          git checkout master -- package.json package-lock.json
+          git restore --source master web
+          git restore --source master bossa-web
+          git restore --source master .gitmodules
+          git restore --source master package.json package-lock.json
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -61,3 +62,36 @@ jobs:
           git add web
           git commit -m "$CURRENT_DATETIME"
           git push
+
+  deploy:
+    name: Deploy pages
+    needs: build
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Switch to document branch
+        run: git switch ${{ env.DOCUMENT_BRANCH }}
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+      
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          # Upload entire repository
+          path: web
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
