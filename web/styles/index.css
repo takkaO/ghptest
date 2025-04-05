@@ -1,0 +1,438 @@
+:root {
+    --color-yrit-main: #00a0ca;
+    --color-yrit-main-hover: #0088ab;
+    --color-yrit-main-light: #e8fbff;
+    --color-yrit-accent: #e962a1;
+    --color-yrit-accent-hover: #cb588d;
+    --color-yrit-accent-light: #ffeff7;
+    --color-flatter-indigo: #3f51b5;
+    --color-flatter-indigo-hover: #283373;
+    --color-flatter-indigo-click: #1e2756;
+}
+
+.bg-yrit-main {
+    background-color: var(--color-yrit-main) !important;
+}
+
+.text-bg-yrit-main {
+    color: #fff !important;
+    background-color: var(--color-yrit-main) !important;
+}
+
+html {
+    position: relative;
+    width: 100vw;
+    overflow-x: hidden;
+    height: 100%;
+}
+
+body {
+    position: relative;
+    overflow-x: hidden;
+    padding: 0;
+    margin: 0;
+    width: 100vw;
+    height: 100%;
+}
+
+/* x-cloak 動作用、詳細は Alpine.js リファレンス参照 */
+[x-cloak] {
+    display: none !important;
+}
+
+section {
+    overflow-x: hidden;
+    overflow-y: auto;
+    width: 100vw;
+    position: absolute;
+    height: -webkit-fill-available;
+
+    opacity: 0;
+    animation: fadeIn 0.5s linear;
+    animation-fill-mode: forwards;  /* 終了時の状態を保持 */
+}
+
+#page1 {
+    /* background-color: aqua; */
+    transition: transform 0.5s ease-in-out;
+}
+
+.card-size {
+    /* margin-left: 5px;
+  margin-right: 5px;
+  margin-bottom: 10px; */
+    width: 40vw !important;
+    max-width: 300px !important;
+    min-width: 250px !important;
+}
+
+.device {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    aspect-ratio: 1/1;
+    object-fit: contain;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.my-grid {
+    display: grid;
+    justify-content: center;
+    grid-template-columns: repeat(auto-fill, clamp(250px, 40vw, 300px));
+    gap: 10px 10px;
+}
+
+/* .test {
+  display: flex;
+  justify-content: center;
+} */
+
+/* .test::after {
+  background-color: aquamarine;
+  display: grid;
+  content:"";
+  margin-left: 5px;
+  margin-right: 5px;
+  width: 40vw !important;
+  max-width: 300px !important;
+  min-width: 250px !important;
+  } */
+
+#page2 {
+    /* background-color: blueviolet; */
+    transition: transform 0.5s ease-in-out;
+    left: 100vw;
+}
+
+.slide {
+    transform: translateX(-100vw);
+}
+
+.responsive-font-size {
+    font-size: clamp(15px, 4vw, 25px);
+}
+
+.selector {
+    max-width: min(500px, 100vw);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.underline {
+    border-bottom-color: darkviolet;
+    border-bottom-style: solid;
+    border-bottom-width: medium;
+}
+
+.width-limit {
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/****************************************/
+/* 左向き矢印ボタン  ここから             */
+/****************************************/
+
+.left-arrow-outsite {
+    width: 100%;
+    max-width: 300px;
+    height: 70px;
+    background-color: var(--color-yrit-main);
+    padding: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    clip-path: polygon(100% 0%, 100% 50%, 100% 100%, 25px 100%, 0% 50%, 25px 0);
+}
+
+.left-arrow-outsite:hover {
+    background-color: var(--color-yrit-main-hover);
+    transition: background-color 0.3s;
+}
+
+.left-arrow-outsite:has(button:disabled) {
+    background-color: var(--color-yrit-main-hover);
+    transition: background-color 0.3s;
+    cursor: not-allowed;
+}
+
+.left-arrow-inside {
+    height: 100%;
+    width: 100%;
+    background-color: white;
+    transition: background-color 0.3s;
+    border-style: none;
+    clip-path: polygon(100% 0%, 100% 50%, 100% 100%, 23px 100%, 1px 50%, 23px 0);
+}
+
+.left-arrow-inside:hover {
+    background-color: rgb(225, 225, 225);
+    transition: background-color 0.3s;
+}
+
+.left-arrow-inside:disabled {
+    background-color: rgb(225, 225, 225);
+    transition: background-color 0.3s;
+    cursor: not-allowed;
+}
+
+/****************************************/
+/* 左向き矢印ボタン  ここまで             */
+/****************************************/
+
+/****************************************/
+/* 右向き矢印ボタン  ここから             */
+/****************************************/
+
+.right-arrow-outsite {
+    margin: 0%;
+    max-width: 300px;
+    width: 100%;
+    height: 70px;
+
+    background-color: var(--color-yrit-accent);
+    padding: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    clip-path: polygon(calc(100% - 25px) 0%, 100% 50%, calc(100% - 25px) 100%, 0% 100%, 0 50%, 0% 0%);
+}
+
+.right-arrow-outsite:hover {
+    background-color: var(--color-yrit-accent-hover);
+    transition: background-color 0.3s;
+}
+
+.right-arrow-inside {
+    height: 100%;
+    background-color: white;
+    transition: background-color 0.3s;
+    clip-path: polygon(calc(100% - 22px) 0%, 100% 50%, calc(100% - 22px) 100%, 0% 100%, 0% 50%, 0% 0%);
+}
+
+.right-arrow-inside:hover {
+    background-color: rgb(225, 225, 225);
+    transition: background-color 0.3s;
+}
+
+/****************************************/
+/* 右向き矢印ボタン  ここまで             */
+/****************************************/
+
+/****************************************/
+/* アウトラインボタン  ここから           */
+/****************************************/
+
+.outline-outsite {
+    margin: 0%;
+    max-width: 300px;
+    width: 100%;
+    height: 70px;
+
+    background-color: var(--color-yrit-accent);
+    padding: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    /* clip-path: polygon(
+		calc(100% - 25px) 0%, 
+		100% 50%, 
+		calc(100% - 25px) 100%, 
+		0% 100%, 
+		0 50%, 
+		0% 0%); */
+}
+
+.outline-outsite:hover {
+    background-color: var(--color-yrit-accent-hover);
+    transition: background-color 0.3s;
+}
+
+.outline-outsite:has(button:disabled) {
+    background-color: var(--color-yrit-accent-hover);
+    transition: background-color 0.3s;
+    cursor: not-allowed;
+}
+
+.outline-inside {
+    height: 100%;
+    width: 100%;
+    background-color: white;
+    transition: background-color 0.3s;
+    border-style: none;
+    /* clip-path: polygon(
+		calc(100% - 22px) 0%, 
+		100% 50%, 
+		calc(100% - 22px) 100%, 
+		0% 100%, 
+		0% 50%, 
+		0% 0%); */
+}
+
+.outline-inside:hover {
+    background-color: rgb(225, 225, 225);
+    transition: background-color 0.3s;
+}
+
+.outline-inside:disabled {
+    background-color: rgb(225, 225, 225);
+    transition: background-color 0.3s;
+    cursor: not-allowed;
+}
+
+/****************************************/
+/* アウトラインボタン  ここまで           */
+/****************************************/
+
+/****************************************/
+/* ソフトウェア選択画面 image  ここから   */
+/****************************************/
+
+.target-device-image {
+    width: clamp(150px, 100%, 50vw) !important;
+    height: auto;
+    max-height: 330px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    background-color: lightgray;
+    border-radius: 15px;
+    filter: drop-shadow(0 0 5px gray);
+}
+
+/****************************************/
+/* ソフトウェア選択画面 image  ここまで   */
+/****************************************/
+
+/* 書き込み時に背景を暗くするための設定 */
+.overlay-flash-writing {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    padding: 0 10px;
+    background: rgba(100, 100, 100, 0.6);
+    z-index: 2147483647;
+}
+
+.progress-board {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: min(100vw, 500px);
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 15px;
+}
+
+/* HTML: <div class="loader"></div> */
+.loader {
+    width: 100px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(farthest-side, var(--color-yrit-accent) 94%, #0000) top/10px 10px no-repeat,
+        conic-gradient(#0000 30%, var(--color-yrit-accent));
+    mask: radial-gradient(farthest-side, #0000 calc(100% - 10px), #000 0);
+    animation: l13 1s infinite linear;
+}
+
+@keyframes l13 {
+    100% {
+        transform: rotate(1turn);
+    }
+}
+
+.loader-panel {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    animation: fadeIn 0.1s linear;
+    animation-delay: 0.1s;          /* 開始までの遅延 */
+    animation-fill-mode: forwards;  /* 終了時の状態を保持 */
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+/****************************************/
+/* アニメーション image                  */
+/****************************************/
+
+.dfu-animation {
+    width: -moz-available;          /* WebKit-based browsers will ignore this. */
+    width: -webkit-fill-available;  /* Mozilla-based browsers will ignore this. */
+    width: fill-available;
+}
+
+/****************************************/
+/* ChangeLog ボタン                     */
+/****************************************/
+
+.changelog-btn {
+    height: 65px;
+    width: 65px;
+    background-color: var(--color-flatter-indigo);
+    color: white;
+    border-color: var(--color-flatter-indigo);
+}
+
+.changelog-btn:disabled {
+    background-color: darkgrey !important;
+    color: rgb(24, 24, 24) !important;
+    border-color: darkgrey !important;
+}
+
+.changelog-btn:hover {
+    background-color: var(--color-flatter-indigo-hover);
+    color: white;
+    border-color: var(--color-flatter-indigo-hover);
+}
+
+.changelog-btn:active {
+    background-color: var(--color-flatter-indigo-click) !important;
+    color: whitesmoke !important;
+    border-color: var(--color-flatter-indigo-click) !important;
+}
+
+/****************************************/
+/* ChangeLog Body                       */
+/****************************************/
+
+.changelog-popup {
+    width: min(90vw, 1000px) !important;
+}
+
+.changelog-body {
+    text-align: left !important;
+    font-size: medium !important;
+    color: black !important;
+}
+
+.changelog-body>h1 {
+    font-size: x-large !important;
+    padding: 0.3em;
+    background: var(--color-yrit-main-light);
+    border-left: solid 5px var(--color-yrit-main);
+}
+
+.changelog-body>h2 {
+    font-size: larger !important;
+    color: black;
+    margin-top: 0.4em;
+    padding-left: 0.3em;
+    padding-bottom: 0.2em;
+    border-left: solid 5px lightgray;
+    border-bottom: solid 2px lightgray;
+}
+
+.changelog-body>h4 {
+    font-size: large !important;
+    color: black;
+}
