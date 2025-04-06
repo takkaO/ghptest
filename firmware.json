@@ -1,0 +1,18 @@
+{
+  "m5stack_basic": {
+    "FactoryTest": [
+      "v1.0"
+    ],
+    "IoT_Device": [
+      "v4.5",
+      "v4.6",
+      "v4.7"
+    ],
+    "IoT_Device_Beta": [
+      "v4.7_Beta1",
+      "v5.0_Beta1",
+      "v5.0_Beta2",
+      "v5.0_Beta3"
+    ]
+  }
+}
