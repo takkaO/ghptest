@@ -1,0 +1,94 @@
+name: Deploy web page
+
+on:
+  # push: 
+  #   branches:
+  #     - master
+  workflow_dispatch:
+
+env:
+  DOCUMENT_BRANCH: "gh-pages"
+
+jobs:
+  build:
+    name: Setup
+    runs-on: ubuntu-24.04
+    permissions:
+      actions: write
+      checks: write
+      contents: write
+    steps:
+      - name: Set current datetime as env variable
+        env:
+          TZ: 'Asia/Tokyo' # Set timezone
+        run: echo "CURRENT_DATETIME=$(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set git-configs
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git config push.default current
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22.14.0'
+
+      - name: Run setup
+        run: |
+          npm i
+          npm run init-bossa-web
+          npm run build-bossa-web
+          npm run copy-modules
+        
+      - name: Switch branch
+        run: | # ブランチが無い場合は新規作成し、ある場合は切り替える
+          git switch ${{ env.DOCUMENT_BRANCH }} 2>/dev/null || git switch --orphan ${{ env.DOCUMENT_BRANCH }}
+      
+      - name: Copy files
+        run: |
+          git restore --source master web
+      
+      - name: Commit an push
+        run: |
+          git add web
+          git commit -m "$CURRENT_DATETIME"
+          git push
+
+  deploy:
+    name: Deploy pages
+    needs: build
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Switch to document branch
+        run: git switch ${{ env.DOCUMENT_BRANCH }}
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+      
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Upload entire repository
+          path: web
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

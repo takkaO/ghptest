@@ -46,7 +46,7 @@ if (window.inElectronPlatform) {
 document.addEventListener('alpine:init', () => {
 	Alpine.data('app', () => ({
 		firmwareInfo: {},				// ファームウェア情報が入った JSON オブジェクト
-		selectedDeviceName: "Unknown",	// 選択中のデバイス名
+		selectedDeviceName: "unknown",	// 選択中のデバイス名
 		selectableFirmwareName: [],		// 選択可能な FW 名のリスト
 		selectedFirmware: "",			// 選択された FW 名
 		selectableFirmwareVersion: [],	// 選択可能な FW バージョンのリスト
@@ -62,7 +62,22 @@ document.addEventListener('alpine:init', () => {
 		async init() {
 			console.log("Ready!");
 
-			let response = await fetch("./firmwares.json")
+			const FILE_PATH = (() => {
+				if (window.location.hostname.endsWith("github.io")) {
+					// For GitHub Pages
+					const GITHUB_USER = window.location.hostname.split(".")[0];
+					const GITHUB_REPO = window.location.pathname.split("/")[1];
+					const BRANCH = "firmware";
+					return [
+						`https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${BRANCH}/`,
+						`firmware.json`
+					].join("");
+				} else {
+					return "./firmware.json";
+				}
+			})();
+
+			let response = await fetch(FILE_PATH)
 				.catch((err) => {
 					// ネットワークエラー
 					console.log("err", err);
@@ -73,18 +88,32 @@ document.addEventListener('alpine:init', () => {
 		},
 
 		async checkChangeLog(selectedDeviceName, selectedFirmware) {
-			let respChangelog = await fetch(
-				`./firmwares/${selectedDeviceName}/${selectedFirmware}/CHANGELOG.md`
-			).then((response) => {
-				if (!response.ok) {
-					return undefined;
+			const FILE_PATH = (() => {
+				if (window.location.hostname.endsWith("github.io")) {
+					// For GitHub Pages
+					const GITHUB_USER = window.location.hostname.split(".")[0];
+					const GITHUB_REPO = window.location.pathname.split("/")[1];
+					const BRANCH = "firmware";
+					return [
+						`https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${BRANCH}/`,
+						`firmware/${selectedDeviceName}/${selectedFirmware}/CHANGELOG.md`
+					].join("");
+				} else {
+					return `./firmware/${selectedDeviceName}/${selectedFirmware}/CHANGELOG.md`;
 				}
-				return response;
-			}).catch((err) => {
-				// ネットワークエラー
-				// 表示できてる時点でこのエラーは発生しないはず
-				return undefined;
-			});
+			})();
+
+			let respChangelog = await fetch(FILE_PATH)
+				.then((response) => {
+					if (!response.ok) {
+						return undefined;
+					}
+					return response;
+				}).catch((err) => {
+					// ネットワークエラー
+					// 表示できてる時点でこのエラーは発生しないはず
+					return undefined;
+				});
 
 			if (respChangelog === undefined) {
 				this.existChangeLog = false;
@@ -345,10 +374,62 @@ document.addEventListener('alpine:init', () => {
 			this.writingProgressMessage = "ファームウェア取得中";
 
 			// ファームウェアの取得
-			const relBootloaderUrl = `./firmwares/${this.selectedDeviceName}/${this.selectedFirmware}/${this.selectedVersion}/${this.selectedFirmware}.ino.bootloader.bin`;
-			const relPartitionsUrl = `./firmwares/${this.selectedDeviceName}/${this.selectedFirmware}/${this.selectedVersion}/${this.selectedFirmware}.ino.partitions.bin`;
-			const relMainBinaryUrl = `./firmwares/${this.selectedDeviceName}/${this.selectedFirmware}/${this.selectedVersion}/${this.selectedFirmware}.ino.bin`;
-			const relBootApp0Url = `./firmwares/${this.selectedDeviceName}/${this.selectedFirmware}/${this.selectedVersion}/boot_app0.bin`;
+			const relBootloaderUrl = (() => {
+				if (window.location.hostname.endsWith("github.io")) {
+					// For GitHub Pages
+					const GITHUB_USER = window.location.hostname.split(".")[0];
+					const GITHUB_REPO = window.location.pathname.split("/")[1];
+					const BRANCH = "firmware";
+					return [
+						`https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${BRANCH}/`,
+						`firmware/${this.selectedDeviceName}/${this.selectedFirmware}/${this.selectedVersion}/${this.selectedFirmware}.ino.bootloader.bin`
+					].join("");
+				} else {
+					return `./firmware/${this.selectedDeviceName}/${this.selectedFirmware}/${this.selectedVersion}/${this.selectedFirmware}.ino.bootloader.bin`;
+				}
+			})();
+			const relPartitionsUrl = (() => {
+				if (window.location.hostname.endsWith("github.io")) {
+					// For GitHub Pages
+					const GITHUB_USER = window.location.hostname.split(".")[0];
+					const GITHUB_REPO = window.location.pathname.split("/")[1];
+					const BRANCH = "firmware";
+					return [
+						`https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${BRANCH}/`,
+						`firmware/${this.selectedDeviceName}/${this.selectedFirmware}/${this.selectedVersion}/${this.selectedFirmware}.ino.partitions.bin`
+					].join("");
+				} else {
+					return `./firmware/${this.selectedDeviceName}/${this.selectedFirmware}/${this.selectedVersion}/${this.selectedFirmware}.ino.partitions.bin`;
+				}
+			})();
+			const relMainBinaryUrl = (() => {
+				if (window.location.hostname.endsWith("github.io")) {
+					// For GitHub Pages
+					const GITHUB_USER = window.location.hostname.split(".")[0];
+					const GITHUB_REPO = window.location.pathname.split("/")[1];
+					const BRANCH = "firmware";
+					return [
+						`https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${BRANCH}/`,
+						`firmware/${this.selectedDeviceName}/${this.selectedFirmware}/${this.selectedVersion}/${this.selectedFirmware}.ino.bin`
+					].join("");
+				} else {
+					return `./firmware/${this.selectedDeviceName}/${this.selectedFirmware}/${this.selectedVersion}/${this.selectedFirmware}.ino.bin`;
+				}
+			})();
+			const relBootApp0Url = (() => {
+				if (window.location.hostname.endsWith("github.io")) {
+					// For GitHub Pages
+					const GITHUB_USER = window.location.hostname.split(".")[0];
+					const GITHUB_REPO = window.location.pathname.split("/")[1];
+					const BRANCH = "firmware";
+					return [
+						`https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${BRANCH}/`,
+						`firmware/${this.selectedDeviceName}/${this.selectedFirmware}/${this.selectedVersion}/boot_app0.bin`
+					].join("");
+				} else {
+					return `./firmware/${this.selectedDeviceName}/${this.selectedFirmware}/${this.selectedVersion}/boot_app0.bin`;
+				}
+			})();
 
 			let respMain = await fetch(
 				relMainBinaryUrl
@@ -513,7 +594,21 @@ document.addEventListener('alpine:init', () => {
 			this.writingProgressMessage = "ファームウェア取得中";
 
 			// ファームウェアの取得
-			const relativeUrl = `./firmwares/${this.selectedDeviceName}/${this.selectedFirmware}/${this.selectedVersion}/${this.selectedFirmware}.ino.bin`;
+			const relativeUrl = (() => {
+				if (window.location.hostname.endsWith("github.io")) {
+					// For GitHub Pages
+					const GITHUB_USER = window.location.hostname.split(".")[0];
+					const GITHUB_REPO = window.location.pathname.split("/")[1];
+					const BRANCH = "firmware";
+					return [
+						`https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${BRANCH}/`,
+						`firmware/${this.selectedDeviceName}/${this.selectedFirmware}/${this.selectedVersion}/${this.selectedFirmware}.ino.bin`
+					].join("");
+				} else {
+					return `./firmware/${this.selectedDeviceName}/${this.selectedFirmware}/${this.selectedVersion}/${this.selectedFirmware}.ino.bin`;
+				}
+			})();
+
 			let response = await fetch(
 				relativeUrl
 			).catch((err) => {

@@ -20,7 +20,7 @@ def versionCompareTo(a: str, b:str):
 
 	for i in range(limit):
 		# 数値でソートできるかトライ
-		if (aUnit[i].isdigit() == True) and (bUnit[i].isdigit() == True):
+		if (aUnit[i].isdigit() is True) and (bUnit[i].isdigit() is True):
 			if int(aUnit[i]) < int(bUnit[i]):
 				return -1
 			if int(aUnit[i]) > int(bUnit[i]):
@@ -41,16 +41,16 @@ def versionCompareTo(a: str, b:str):
 
 def main():
 	result = {}
-	BASE_PATH = "web/firmwares"
+	BASE_PATH = "web/firmware"
 	devices = sorted(map(os.path.normpath, glob.glob("*/", root_dir=BASE_PATH)))
 	for device in devices:
-		firmwares = sorted(map(os.path.normpath, glob.glob("*/", root_dir=os.path.join(BASE_PATH, device))))
+		firmware_list = sorted(map(os.path.normpath, glob.glob("*/", root_dir=os.path.join(BASE_PATH, device))))
 		result[device] = {}
-		for firmware in firmwares:
+		for firmware in firmware_list:
 			versions = list(map(os.path.normpath, glob.glob("*/", root_dir=os.path.join(BASE_PATH, device, firmware))))
 			result[device][firmware] = sorted(versions, key=cmp_to_key(versionCompareTo))
 	
-	with open("./web/firmwares.json", 'w') as f:
+	with open("./web/firmware.json", 'w') as f:
 		json.dump(result, f, indent=2)
 
 if __name__ == "__main__":
