@@ -40,7 +40,11 @@ function windowUnloadHandler(e) {
 let g_Title = "YRIT IoT 書き込みツール";
 g_Title += window.inElectronPlatform ? "　ポータブル版" : " WEB版";
 if (window.inElectronPlatform) {
+	// Electron 環境下の場合はタイトルバーにバージョン情報を表示
 	document.title = g_Title + `　version ${Info.version}`
+}
+else {
+	document.title = g_Title;
 }
 
 document.addEventListener('alpine:init', () => {
