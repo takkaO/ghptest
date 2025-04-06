@@ -13,6 +13,7 @@ jobs:
   build:
     name: Setup
     runs-on: ubuntu-24.04
+    environment: FOR_PROGRESS_BAR
     permissions:
       actions: write
       checks: write
@@ -46,13 +47,17 @@ jobs:
           npm run build-bossa-web
           npm run copy-modules
         
+      - name: Backup directory
+        run: |
+          cp -r ./web ~/backup
+
       - name: Switch branch
         run: | # ブランチが無い場合は新規作成し、ある場合は切り替える
           git switch ${{ env.DOCUMENT_BRANCH }} 2>/dev/null || git switch --orphan ${{ env.DOCUMENT_BRANCH }}
       
-      - name: Copy files
+      - name: Restore directory
         run: |
-          git restore --source master web
+          cp -rf ~/backup/* ./web
       
       - name: Commit an push
         run: |
