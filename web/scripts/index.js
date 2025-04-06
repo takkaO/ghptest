@@ -64,7 +64,7 @@ document.addEventListener('alpine:init', () => {
 		changeLogHtml: "",				// 変更履歴の html 文字列
 
 		async init() {
-			console.log("Ready!");
+			console.log("Ready! OK");
 
 			const FILE_PATH = (() => {
 				if (window.location.hostname.endsWith("github.io")) {
